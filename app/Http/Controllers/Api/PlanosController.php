@@ -21,7 +21,6 @@ class PlanosController extends Controller
                 'nome' => $planodata['nome'],
                 'preco' =>$planodata['preco'],
                 'descricao' => $planodata['descricao'],
-                'vigencia' => $planodata['vigencia']
             ]);
             $plano->save();
 
@@ -45,7 +44,6 @@ class PlanosController extends Controller
         $plano->nome = $planodata['nome'];
         $plano->preco = $planodata['preco'];
         $plano->descricao = $planodata['descricao'];
-        $plano->vigencia = $planodata['vigencia'];
         $plano->save();
     }
 }

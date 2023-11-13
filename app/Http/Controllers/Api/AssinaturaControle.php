@@ -27,12 +27,13 @@ class AssinaturaControle extends Controller
         $assinaturaRequest = $request->all();
         $planoId = $assinaturaRequest['plano'];
         $cliente = $assinaturaRequest['cliente'];
+        $vigencia = $assinaturaRequest['vigencia'];
         $plano = Plano::find($planoId);
 
         try {
             $plano = new Assinatura::create([
                 'data_inicio' =>new DateTime('now'),
-                'data_fim' => (new DateTime())->add($plano->vigencia),
+                'data_fim' => (new DateTime())->add($vigencia),
                 'cliente_id' => $cliente,
                 'status' => 'ativo',
                 'plano' => $plano,
