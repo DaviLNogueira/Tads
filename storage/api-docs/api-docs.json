@@ -5,17 +5,394 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/assinaturas": {
+        "/assinatura": {
             "get": {
                 "tags": [
-                    "Signatures"
+                    "Assinaturas"
                 ],
-                "summary": "Display a listing of signatures",
-                "description": "Retrieves a list of all signatures",
-                "operationId": "074da07bc91cdfde39bd85fe21c01995",
+                "summary": "Buscar assinaturas",
+                "description": "Todas as assinaturas",
+                "operationId": "096a6fdf2f01b6e5583da8fcfc593e75",
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "The response data",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "data_inicio": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "data_termino": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "plano_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "cliente_id": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object",
+                                    "example": {
+                                        "errcode": 1,
+                                        "errmsg": "ok",
+                                        "data": []
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Assinatura",
+                "operationId": "9e205cad62c739d10e5d674d53a2774b",
+                "parameters": [
+                    {
+                        "name": "plano",
+                        "in": "header",
+                        "description": "id do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cliente",
+                        "in": "header",
+                        "description": "Id do cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "vigencia",
+                        "in": "header",
+                        "description": "Dias de vigência do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Assinatura registrada com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro na validação"
+                    }
+                }
+            }
+        },
+        "/assinatura/{id}": {
+            "get": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Buscar um assinatura especifica",
+                "operationId": "f56275d8ef8b60599adb232649937868",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id da assinatura",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data_inicio": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "data_termino": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "plano_id": {
+                                            "type": "integer"
+                                        },
+                                        "cliente_id": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Excluir uma assinatura",
+                "operationId": "f6d39e50ec2e70c44d95f85a5f0d4607",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id da assinatura",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Assinatura exluida com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro na validação"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Atualizar Assinatura",
+                "operationId": "099c979d12baded32ed7ff3a8e25aa0a",
+                "parameters": [
+                    {
+                        "name": "data_termino",
+                        "in": "header",
+                        "description": "No data de termino",
+                        "required": true,
+                        "schema": {
+                            "type": "datetime"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "header",
+                        "description": "Novo status ",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id da assinatura",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Assinatura atualizada com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro na validação"
+                    }
+                }
+            }
+        },
+        "/planos": {
+            "get": {
+                "tags": [
+                    "Planos"
+                ],
+                "summary": "Buscar planos",
+                "description": "Todos os planos",
+                "operationId": "5df044e8ed170e3741410bb3e66c5cf8",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "The response data",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "nome": {
+                                                        "type": "string"
+                                                    },
+                                                    "preco": {
+                                                        "type": "number",
+                                                        "format": "float"
+                                                    },
+                                                    "descricao": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object",
+                                    "example": {
+                                        "errcode": 1,
+                                        "errmsg": "ok",
+                                        "data": []
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Planos"
+                ],
+                "summary": "Novo Plano",
+                "operationId": "9033a6ba719bd3e482b957d254a61a35",
+                "parameters": [
+                    {
+                        "name": "nome",
+                        "in": "header",
+                        "description": "nome do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "descricao",
+                        "in": "header",
+                        "description": "descricao do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "preco",
+                        "in": "header",
+                        "description": "preco do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "float"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Plano registrado com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro na validação"
+                    }
+                }
+            }
+        },
+        "/palnos/{id}": {
+            "delete": {
+                "tags": [
+                    "Planos"
+                ],
+                "summary": "Excluir um plano",
+                "operationId": "f9db114a2b267e845a3d0dbd0cc69223",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Plano exluido com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro na validação"
+                    }
+                }
+            }
+        },
+        "/planos/{id}": {
+            "patch": {
+                "tags": [
+                    "Planos"
+                ],
+                "summary": "Atualizar um plano",
+                "operationId": "61aa99b59c11199c694c171c5d0e6efd",
+                "parameters": [
+                    {
+                        "name": "nome",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "descricao",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "preco",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "float"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Assinatura atualizada com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro na validação"
                     }
                 }
             }
