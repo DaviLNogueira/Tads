@@ -225,6 +225,71 @@
                 }
             }
         },
+        "/cliente/{id}": {
+            "get": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Buscar as assinaturas do cliente",
+                "operationId": "0a0587ec20157cff55f61d19ed91fc89",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id da cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "The response data",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "data_inicio": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "data_termino": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "plano_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "cliente_id": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object",
+                                    "example": {
+                                        "errcode": 1,
+                                        "errmsg": "ok",
+                                        "data": []
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/planos": {
             "get": {
                 "tags": [

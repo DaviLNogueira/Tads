@@ -88,18 +88,18 @@ class PlanosController extends Controller
      * )
      */
     public function new(Request $request){
-//        $planodata = $request->all();
-//        try {
-//            $plano = new Plano::create([
-//                'nome' => $planodata['nome'],
-//                'preco' =>$planodata['preco'],
-//                'descricao' => $planodata['descricao'],
-//            ]);
-//            $plano->save();
-//
-//        }catch (\Exception $e){
-//            Log::alert($e->getMessage());
-//        }
+        $planodata = $request->all();
+        try {
+            $plano = new Plano::create([
+                'nome' => $planodata['nome'],
+                'preco' =>$planodata['preco'],
+                'descricao' => $planodata['descricao'],
+            ]);
+            $plano->save();
+
+        }catch (\Exception $e){
+            Log::alert($e->getMessage());
+        }
 
     }
 

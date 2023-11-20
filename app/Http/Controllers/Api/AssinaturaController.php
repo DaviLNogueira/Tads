@@ -96,26 +96,30 @@ class AssinaturaController extends Controller
      */
     public function store(Request $request)
     {
-//        $assinaturaRequest = $request->all();
-//        $planoId = $assinaturaRequest['plano'];
-//        $cliente = $assinaturaRequest['cliente'];
-//        $vigencia = $assinaturaRequest['vigencia'];
-//        $plano = Plano::find($planoId);
-//
-//        try {
-//            $plano = new Assinatura::create([
-//                'data_inicio' =>new DateTime('now'),
-//                'data_fim' => (new DateTime())->add($vigencia),
-//                'cliente_id' => $cliente,
-//                'status' => 'ativo',
-//                'plano' => $plano,
-//
-//            ]);
-//            $plano->save();
-//
-//        }catch (\Exception $e){
-//            Log::alert($e->getMessage());
-//        }
+        $assinaturaRequest = $request->all();
+        $planoId = $assinaturaRequest['plano'];
+        $cliente = $assinaturaRequest['cliente'];
+        $vigencia = $assinaturaRequest['vigencia'];
+
+        // Obtenha a assinatura atual do cliente
+        $assinaturaAtual = Assinatura::where('cliente_id', $cliente)->first();
+
+        // Se o usuário não tiver nenhuma assinatura ou se a assinatura atual estiver inativa
+        if (!$assinaturaAtual || $assinaturaAtual->status != 'ativo') {
+            // Crie uma nova assinatura
+            $assinatura = new Assinatura();
+            $assinatura->cliente_id = $cliente;
+            $assinatura->plano_id = $planoId;
+            $assinatura->data_inicio = new DateTime();
+            $assinatura->data_termino = (new DateTime())->add($vigencia);
+            $assinatura->status = 'ativo';
+            $assinatura->save();
+
+            return $assinatura;
+        } else {
+            // Não há necessidade de criar uma nova assinatura
+            return null;
+        }
     }
 
     /**
@@ -226,5 +230,64 @@ class AssinaturaController extends Controller
     {
         $assinatura = Assinatura::find($id);
         $assinatura->delete();
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/cliente/{id}",
+     *     summary="Buscar as assinaturas do cliente",
+     *     tags={"Assinaturas"},
+     *     @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          description="id da cliente",
+     *          required=true,
+     *          @OA\Schema(type="integer")
+     *      ),
+     *    @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *           content={
+     *               @OA\MediaType(
+     *                   mediaType="application/json",
+     *                   @OA\Schema(
+     *                       @OA\Property(
+     *                           property="data",
+     *                           type="array",
+     *                           description="The response data",
+     *                           items = @OA\Items(
+     *                               @OA\Property(
+     *                           property="data_inicio",
+     *                           type="datetime",
+     *                        ), @OA\Property(
+     *                           property="data_termino",
+     *                           type="datetime",
+     *                        ),@OA\Property(
+     *                           property="status",
+     *                           type="string",
+     *                        ),@OA\Property(
+     *                           property="plano_id",
+     *                           type="integer",
+     *                        ),@OA\Property(
+     *                           property="cliente_id",
+     *                           type="integer",
+     *                        ),
+     *                           )
+     *                       ),
+     *                       example={
+     *                           "errcode": 1,
+     *                           "errmsg": "ok",
+     *                           "data": {}
+     *                       }
+     *                   )
+     *               )
+     *           }
+     *
+     *      )
+     * )
+     */
+    public function getAssinaturaByClienteId(int $clienteId)
+    {
+        return Assinatura::where('cliente_id', $clienteId)->first();
     }
 }

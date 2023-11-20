@@ -12,9 +12,10 @@ Route::patch('/planos/{id}',[PlanosController::class,'edit']);
 
 Route::get('/assinatura',[AssinaturaController::class,'index']);
 Route::post('/assinatura',[AssinaturaController::class,'store']);
-Route::patch('/assinatura/{id]',[AssinaturaController::class,'update']);
-Route::get('/assinatura/{id]',[AssinaturaController::class,'show']);
-Route::delete('/assinatura/{id]',[AssinaturaController::class,'destroy']);
+Route::patch('/assinatura/{id}',[AssinaturaController::class,'update']);
+Route::get('/assinatura/{id}]',[AssinaturaController::class,'show']);
+Route::get('/cliente/{id}]',[AssinaturaController::class,'getAssinaturaByClienteId']);
+Route::delete('/assinatura/{id}',[AssinaturaController::class,'destroy']);
 
 Route::get('/',function(){
     return response()->json([
