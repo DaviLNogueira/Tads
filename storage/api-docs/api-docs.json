@@ -1,0 +1,33 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Swagger with Laravel",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/assinaturas": {
+            "get": {
+                "tags": [
+                    "Signatures"
+                ],
+                "summary": "Display a listing of signatures",
+                "description": "Retrieves a list of all signatures",
+                "operationId": "074da07bc91cdfde39bd85fe21c01995",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
