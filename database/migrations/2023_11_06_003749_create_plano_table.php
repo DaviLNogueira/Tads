@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->double('preco')->nullable(false);
             $table->string('descricao')->nullable(false);
-            $table->integer('vigencia')->nullable(false);
             $table->timestamps();
         });
     }

@@ -5,23 +5,8 @@
 ### Passo a passo
 Clone Repositório
 ```sh
-git clone https://github.com/especializati/setup-docker-laravel.git
+git clone https://github.com/DaviLNogueira/Tads.git
 ```
-
-Clone os Arquivos do Laravel
-```sh
-git clone https://github.com/laravel/laravel.git app-laravel
-```
-
-
-Copie os arquivos docker-compose.yml, Dockerfile e o diretório docker/ para o seu projeto
-```sh
-cp -rf setup-docker-laravel/* app-laravel/
-```
-```sh
-cd app-laravel/
-```
-
 
 Crie o Arquivo .env
 ```sh
@@ -77,3 +62,22 @@ php artisan key:generate
 
 Acessar o projeto
 [http://localhost:8989](http://localhost:8989)
+
+## Rotas de Planos
+
+| Rota | Método | Descrição |
+|---|---|---|
+| `/planos` | `GET` | Retorna uma lista de planos. |
+| `/planos` | `POST` | Cria um novo plano. |
+| `/planos/{id}` | `DELETE` | Exclui um plano. |
+| `/planos/{id}` | `PATCH` | Edita um plano. |
+
+## Rotas de Assinaturas
+
+| Rota | Método | Descrição |
+|---|---|---|
+| `/assinatura` | `GET` | Retorna uma lista de assinaturas. |
+| `/assinatura` | `POST` | Cria uma nova assinatura. |
+| `/assinatura/{id}` | `PATCH` | Edita uma assinatura. |
+| `/assinatura/{id}` | `GET` | Exibe uma assinatura. |
+| `/assinatura/{id}` | `DELETE` | Exclui uma assinatura. |
