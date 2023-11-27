@@ -57,7 +57,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "token": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -101,7 +106,12 @@
                     "422": {
                         "description": "Erro na validação"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "token": []
+                    }
+                ]
             }
         },
         "/assinatura/{id}": {
@@ -152,7 +162,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "token": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -178,7 +193,12 @@
                     "422": {
                         "description": "Erro na validação"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "token": []
+                    }
+                ]
             },
             "patch": {
                 "tags": [
@@ -222,7 +242,12 @@
                     "422": {
                         "description": "Erro na validação"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "token": []
+                    }
+                ]
             }
         },
         "/cliente/{id}": {
@@ -287,7 +312,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "token": []
+                    }
+                ]
             }
         },
         "/planos": {
@@ -335,7 +365,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "token": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -379,16 +414,21 @@
                     "422": {
                         "description": "Erro na validação"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "token": []
+                    }
+                ]
             }
         },
-        "/palnos/{id}": {
+        "/planos/{id}": {
             "delete": {
                 "tags": [
                     "Planos"
                 ],
                 "summary": "Excluir um plano",
-                "operationId": "f9db114a2b267e845a3d0dbd0cc69223",
+                "operationId": "b5182f9c814f6704dd4847a375ba76d6",
                 "parameters": [
                     {
                         "name": "id",
@@ -407,10 +447,13 @@
                     "422": {
                         "description": "Erro na validação"
                     }
-                }
-            }
-        },
-        "/planos/{id}": {
+                },
+                "security": [
+                    {
+                        "token": []
+                    }
+                ]
+            },
             "patch": {
                 "tags": [
                     "Planos"
@@ -459,7 +502,12 @@
                     "422": {
                         "description": "Erro na validação"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "token": []
+                    }
+                ]
             }
         }
     },
@@ -467,6 +515,8 @@
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
             }

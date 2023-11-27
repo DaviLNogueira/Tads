@@ -2,11 +2,21 @@
 
 namespace App\Service;
 
+use Exception;
+
 class PlanoValidacao
 {
 
-    public function alteracaoValor()
+    /**
+     * @throws Exception
+     */
+    public function exigirCampos(array $campos, array $data)
     {
-
+        foreach ($campos as  $campo) {
+            $contem = array_key_exists($campo,$data);
+            if(!$contem){
+                throw new Exception(sprintf("Exige o campo %s",$campo));
+            }
+        }
     }
 }

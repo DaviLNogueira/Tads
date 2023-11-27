@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Assinatura;
 use App\Models\Plano;
+use App\Service\AssinaturaValidacao;
+use App\Service\ValidarRequisao;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,6 +19,7 @@ class AssinaturaController extends Controller
      *     summary="Buscar assinaturas",
      *     description="Todas as assinaturas",
      *     tags={"Assinaturas"},
+     *     security={{"token": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -59,8 +62,9 @@ class AssinaturaController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function index(Request $request, ValidarRequisao $validarRequisao)
     {
+        $validarRequisao->ehUsuarioValido($request);
         return Assinatura::all();
     }
 
@@ -69,6 +73,7 @@ class AssinaturaController extends Controller
      *     path="/assinatura",
      *     summary="Assinatura",
      *     tags={"Assinaturas"},
+     *     security={{"token": {}}},
      *     @OA\Parameter(
      *         name="plano",
      *         in="header",
@@ -94,12 +99,14 @@ class AssinaturaController extends Controller
      *     @OA\Response(response="422", description="Erro na validação")
      * )
      */
-    public function store(Request $request)
+    public function store(Request $request, AssinaturaValidacao $validacao, ValidarRequisao $validarRequisao)
     {
-        $assinaturaRequest = $request->all();
-        $planoId = $assinaturaRequest['plano'];
-        $cliente = $assinaturaRequest['cliente'];
-        $vigencia = $assinaturaRequest['vigencia'];
+        $validarRequisao->ehUsuarioValido($request);
+        $data = $request->all();
+        $validacao->exigirCampos(['plano', 'cliente', 'vigencia'], $data);
+        $planoId = $data['plano'];
+        $cliente = $data['cliente'];
+        $vigencia = $data['vigencia'];
 
         // Obtenha a assinatura atual do cliente
         $assinaturaAtual = Assinatura::where('cliente_id', $cliente)->first();
@@ -127,6 +134,7 @@ class AssinaturaController extends Controller
      *     path="/assinatura/{id}",
      *     summary="Buscar um assinatura especifica",
      *     tags={"Assinaturas"},
+     *     security={{"token": {}}},
      *     @OA\Parameter(
      *          name="id",
      *          in="path",
@@ -165,8 +173,9 @@ class AssinaturaController extends Controller
      *     )
      * )
      */
-    public function show(string $id)
+    public function show(string $id, Request $request, ValidarRequisao $validarRequisao)
     {
+        $validarRequisao->ehUsuarioValido($request);
         return Assinatura::find($id);
     }
 
@@ -175,6 +184,7 @@ class AssinaturaController extends Controller
      *     path="/assinatura/{id}",
      *     summary="Atualizar Assinatura",
      *     tags={"Assinaturas"},
+     *     security={{"token": {}}},
      *     @OA\Parameter(
      *         name="data_termino",
      *         in="header",
@@ -200,8 +210,9 @@ class AssinaturaController extends Controller
      *     @OA\Response(response="422", description="Erro na validação")
      * )
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id, ValidarRequisao $validarRequisao)
     {
+        $validarRequisao->ehUsuarioValido($request);
         $assinaturaRequest = $request->all();
         $assinatura = Assinatura::find($id);
         $assinatura->data_termino = $assinaturaRequest['data_termino'];
@@ -215,6 +226,7 @@ class AssinaturaController extends Controller
      *     path="/assinatura/{id}",
      *     summary="Excluir uma assinatura",
      *     tags={"Assinaturas"},
+     *     security={{"token": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -226,8 +238,9 @@ class AssinaturaController extends Controller
      *     @OA\Response(response="422", description="Erro na validação")
      * )
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request, ValidarRequisao $validarRequisao)
     {
+        $validarRequisao->ehUsuarioValido($request);
         $assinatura = Assinatura::find($id);
         $assinatura->delete();
     }
@@ -237,6 +250,7 @@ class AssinaturaController extends Controller
      *     path="/cliente/{id}",
      *     summary="Buscar as assinaturas do cliente",
      *     tags={"Assinaturas"},
+     *     security={{"token": {}}},
      *     @OA\Parameter(
      *          name="id",
      *          in="path",
@@ -286,8 +300,9 @@ class AssinaturaController extends Controller
      *      )
      * )
      */
-    public function getAssinaturaByClienteId(int $clienteId)
+    public function getAssinaturaByClienteId(int $clienteId, Request $request, ValidarRequisao $validarRequisao)
     {
+        $validarRequisao->ehUsuarioValido($request);
         return Assinatura::where('cliente_id', $clienteId)->first();
     }
 }
