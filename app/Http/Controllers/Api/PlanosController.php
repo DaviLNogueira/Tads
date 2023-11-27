@@ -8,6 +8,7 @@ use App\Service\ValidarRequisao;
 use Illuminate\Http\Request;
 use App\Models\Plano;
 use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Contracts\Providers\JWT;
 
 class PlanosController extends Controller
 {
