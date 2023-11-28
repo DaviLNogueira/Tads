@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-use App\Service\ValidarRequisao;
 use Exception;
 
 class ValidationExeption extends Exception

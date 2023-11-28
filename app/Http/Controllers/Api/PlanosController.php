@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Service\AssinaturaValidacao;
 use App\Service\PlanoValidacao;
-use App\Service\ValidarRequisao;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\Plano;
@@ -55,10 +54,9 @@ class PlanosController extends Controller
      *     )
      * )
      */
-    public function all(Request $request, ValidarRequisao $validarRequisao)
+    public function all()
     {
-        $validarRequisao->ehUsuarioValido($request);
-        return Plano::all();
+        return Plano::all()->jsonSerialize();
 
     }
 
@@ -102,9 +100,8 @@ class PlanosController extends Controller
      * )
      * @throws Exception
      */
-    public function new(Request $request, PlanoValidacao $validacao, ValidarRequisao $validarRequisao): void
+    public function new(Request $request, PlanoValidacao $validacao): void
     {
-        $validarRequisao->ehUsuarioValido($request);
         $data = $request->all();
         $validacao->exigirCampos(['name', 'preco', 'descricao', 'vigencia'], $data);
         try {
@@ -141,9 +138,8 @@ class PlanosController extends Controller
      * @throws Exception
      */
 
-    public function delete(int $id, AssinaturaValidacao $service, Request $request, ValidarRequisao $validarRequisao)
+    public function delete(int $id, AssinaturaValidacao $service)
     {
-        $validarRequisao->ehUsuarioValido($request);
         $plano = Plano::find($id);
         $service->validarExclusao($plano);
         $plano->delete();
@@ -184,9 +180,8 @@ class PlanosController extends Controller
      * )
      */
 
-    public function edit(Request $request, int $id, PlanoValidacao $validacao, ValidarRequisao $validarRequisao)
+    public function edit(Request $request, int $id, PlanoValidacao $validacao)
     {
-        $validarRequisao->ehUsuarioValido($request);
         $data = $request->all();
         $validacao->exigirCampos(['name', 'preco', 'descricao', 'vigencia'], $data);
         $plano = Plano::find($id);

@@ -1,22 +1,28 @@
 <?php
 
-namespace App\Service;
+namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Mockery\Exception;
+use Symfony\Component\HttpFoundation\Response;
 
-class ValidarRequisao
+class MiddlewareKeycloack
 {
     /**
+     * Handle an incoming request.
+     *
+     * @param Closure(Request): (Response) $next
      */
-    public function ehUsuarioValido(Request $request): void
+    public function handle(Request $request, Closure $next): Response
     {
         $token = $request->bearerToken();
         if (empty($token)) {
-            throw new Exception('Token não encontrado', 400);
+            throw new Exception('Token não encontrado', 401);
         }
         $this->comunicarComKeycloak($token);
+        return $next($request);
     }
 
     public function comunicarComKeycloak(string $token): void
@@ -27,9 +33,9 @@ class ValidarRequisao
                 'Content-Type' => 'application/json'
             ])->post('https://auth.facoffee.hsborges.dev/realms/facoffee/protocol/openid-connect/userinfo');
             if($response->status() >= 200 && $response->status() < 300){
-                return;
+                $this->salvarUserSessao($response->json());
             }
-            if($response->status() >= 400 && $response->status() < 500){
+            elseif($response->status() >= 400 && $response->status() < 500){
                 throw new Exception('Usuário não autorizado', 401);
             }
             else{
@@ -37,8 +43,16 @@ class ValidarRequisao
             }
 
         } catch (\Exception $exception) {
-            throw new Exception('Não foi possível comunicar com o FACOFFEE', 401);
+            throw new Exception(sprintf('Não foi possível comunicar com o FACOFFEE: %s',$exception->getMessage()), 401);
         }
 
+    }
+
+    public function salvarUserSessao(array $data) : void
+    {
+        session([
+            'name' => $data['name'],
+            'email' => $data['email']
+        ]);
     }
 }

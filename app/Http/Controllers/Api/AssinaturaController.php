@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assinatura;
-use App\Models\Plano;
 use App\Service\AssinaturaValidacao;
-use App\Service\ValidarRequisao;
 use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class AssinaturaController extends Controller
 {
@@ -62,9 +59,8 @@ class AssinaturaController extends Controller
      *     )
      * )
      */
-    public function index(Request $request, ValidarRequisao $validarRequisao)
+    public function index()
     {
-        $validarRequisao->ehUsuarioValido($request);
         return Assinatura::all();
     }
 
@@ -99,9 +95,8 @@ class AssinaturaController extends Controller
      *     @OA\Response(response="422", description="Erro na validação")
      * )
      */
-    public function store(Request $request, AssinaturaValidacao $validacao, ValidarRequisao $validarRequisao)
+    public function store(Request $request, AssinaturaValidacao $validacao)
     {
-        $validarRequisao->ehUsuarioValido($request);
         $data = $request->all();
         $validacao->exigirCampos(['plano', 'cliente', 'vigencia'], $data);
         $planoId = $data['plano'];
@@ -173,9 +168,8 @@ class AssinaturaController extends Controller
      *     )
      * )
      */
-    public function show(string $id, Request $request, ValidarRequisao $validarRequisao)
+    public function show(string $id)
     {
-        $validarRequisao->ehUsuarioValido($request);
         return Assinatura::find($id);
     }
 
@@ -210,9 +204,8 @@ class AssinaturaController extends Controller
      *     @OA\Response(response="422", description="Erro na validação")
      * )
      */
-    public function update(Request $request, string $id, ValidarRequisao $validarRequisao)
+    public function update(Request $request, string $id)
     {
-        $validarRequisao->ehUsuarioValido($request);
         $assinaturaRequest = $request->all();
         $assinatura = Assinatura::find($id);
         $assinatura->data_termino = $assinaturaRequest['data_termino'];
@@ -238,9 +231,8 @@ class AssinaturaController extends Controller
      *     @OA\Response(response="422", description="Erro na validação")
      * )
      */
-    public function destroy(string $id, Request $request, ValidarRequisao $validarRequisao)
+    public function destroy(string $id)
     {
-        $validarRequisao->ehUsuarioValido($request);
         $assinatura = Assinatura::find($id);
         $assinatura->delete();
     }
@@ -300,9 +292,8 @@ class AssinaturaController extends Controller
      *      )
      * )
      */
-    public function getAssinaturaByClienteId(int $clienteId, Request $request, ValidarRequisao $validarRequisao)
+    public function getAssinaturaByClienteId(int $clienteId)
     {
-        $validarRequisao->ehUsuarioValido($request);
         return Assinatura::where('cliente_id', $clienteId)->first();
     }
 }
