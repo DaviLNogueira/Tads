@@ -15,4 +15,9 @@ class Plano extends Model
         'vigencia'
     ];
 
+    public function vigencia() : int
+    {
+        return $this->vigencia;
+    }
+
 }

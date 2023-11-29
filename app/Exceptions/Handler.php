@@ -34,7 +34,9 @@ class Handler extends ExceptionHandler
         return response()->json(
             [
                 'status' => $e->getCode(),
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
             ],
             400
         );

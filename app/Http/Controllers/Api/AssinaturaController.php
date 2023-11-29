@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assinatura;
+use App\Models\Plano;
 use App\Service\AssinaturaValidacao;
 use DateTime;
+use Exception;
 use Illuminate\Http\Request;
 
 class AssinaturaController extends Controller
@@ -71,56 +73,30 @@ class AssinaturaController extends Controller
      *     tags={"Assinaturas"},
      *     security={{"token": {}}},
      *     @OA\Parameter(
-     *         name="plano",
+     *         name="plano_id",
      *         in="header",
      *         description="id do plano",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Parameter(
-     *         name="cliente",
-     *         in="header",
-     *         description="Id do cliente",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Parameter(
-     *         name="vigencia",
-     *         in="header",
-     *         description="Dias de vigência do plano",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(response="201", description="Assinatura registrada com sucesso"),
+     *     @OA\Response(response="200", description="Assinatura registrada com sucesso"),
      *     @OA\Response(response="422", description="Erro na validação")
      * )
+     * @throws Exception
      */
     public function store(Request $request, AssinaturaValidacao $validacao)
     {
         $data = $request->all();
-        $validacao->exigirCampos(['plano', 'cliente', 'vigencia'], $data);
-        $planoId = $data['plano'];
-        $cliente = $data['cliente'];
-        $vigencia = $data['vigencia'];
-
-        // Obtenha a assinatura atual do cliente
-        $assinaturaAtual = Assinatura::where('cliente_id', $cliente)->first();
-
+        $validacao->exigirCampos(['plano_id'], $data);
+        $plano = Plano::find($data['plano_id']);
+        $assinatura = Assinatura::newAssinatura($plano);
+//         Obtenha a assinatura atual do cliente
+        $assinaturaAtual = Assinatura::where('email', session('email'))->first();
         // Se o usuário não tiver nenhuma assinatura ou se a assinatura atual estiver inativa
         if (!$assinaturaAtual || $assinaturaAtual->status != 'ativo') {
-            // Crie uma nova assinatura
-            $assinatura = new Assinatura();
-            $assinatura->cliente_id = $cliente;
-            $assinatura->plano_id = $planoId;
-            $assinatura->data_inicio = new DateTime();
-            $assinatura->data_termino = (new DateTime())->add($vigencia);
-            $assinatura->status = 'ativo';
-            $assinatura->save();
-
-            return $assinatura;
+            return  $assinatura->jsonSerialize();
         } else {
-            // Não há necessidade de criar uma nova assinatura
-            return null;
+            throw new Exception("Usuário com asssinatura ativa");
         }
     }
 
@@ -203,14 +179,18 @@ class AssinaturaController extends Controller
      *     @OA\Response(response="201", description="Assinatura atualizada com sucesso"),
      *     @OA\Response(response="422", description="Erro na validação")
      * )
+     * @throws Exception
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id,AssinaturaValidacao $validacao)
     {
-        $assinaturaRequest = $request->all();
+        $data = $request->all();
+        $validacao->exigirCampos(['data_termino','status'],$data);
         $assinatura = Assinatura::find($id);
-        $assinatura->data_termino = $assinaturaRequest['data_termino'];
-        $assinatura->status = $assinaturaRequest['status'];
+
+        $assinatura->data_termino = (new DateTime($data['data_termino']))->format('Y-m-d');
+        $assinatura->status = $data['status'];
         $assinatura->save();
+        return $assinatura;
 
     }
 
@@ -292,8 +272,8 @@ class AssinaturaController extends Controller
      *      )
      * )
      */
-    public function getAssinaturaByClienteId(int $clienteId)
+    public function getAssinaturaByClienteId()
     {
-        return Assinatura::where('cliente_id', $clienteId)->first();
+        return Assinatura::where('email', session('email'))->first();
     }
 }
